@@ -1,7 +1,4 @@
-```markdown
 <div align="center">
-
-```text
  ███████╗ █████╗ ██╗   ██╗██╗ ██████╗██╗     ██╗
  ██╔════╝██╔══██╗██║   ██║██║██╔════╝██║     ██║
  █████╗  ███████║██║   ██║██║██║     ██║     ██║
@@ -77,82 +74,82 @@ favicli remove
  ██║     ██║  ██║ ╚████╔╝ ██║╚██████╗███████╗██║
  ╚═╝     ╚═╝  ╚═╝  ╚═══╝  ╚═╝ ╚═════╝╚══════╝╚═╝
 
- ╔══════════════════════════════════════════════════════════╗
- ║                                                          ║
- ║   🎨  Favicon CLI  v1.0.0                                ║
- ║                                                          ║
- ║   Detect → Choose → Generate → Inject                    ║
- ║                                                          ║
- ║   One command to set up favicons for any                 ║
- ║   React/Next.js project.                                 ║
- ║                                                          ║
- ║   Created by Zain Afzal • zainafzal.dev                  ║
- ║                                                          ║
- ╚══════════════════════════════════════════════════════════╝
+ ╔════════════════════════════════════════════════════════╗
+ ║                                                        ║
+ ║   * Favicon CLI  v1.0.0                               ║
+ ║                                                        ║
+ ║   Detect -> Choose -> Generate -> Inject               ║
+ ║                                                        ║
+ ║   One command to set up favicons for any               ║
+ ║   React/Next.js project.                               ║
+ ║                                                        ║
+ ║   Created by Zain Afzal • zainafzal.dev                ║
+ ║                                                        ║
+ ╚════════════════════════════════════════════════════════╝
 
  ? What would you like to do?
- ❯ 🎨  Set favicons            — interactive setup
-   🔍  Detect project          — check project type
-   🗑️   Remove generated files  — clean up
+ > * Set favicons            — interactive setup
+   * Detect project          — check project type
+   x  Remove generated files  — clean up
    ────────────────────────────────────────────────
-   ⚙️   Help
-       Exit
+   i  Help
+      Exit
 
 ```
 
 ```text
   ┌─ STEP 1/4 ─ Detect Project ──────────────────────────┐
   │                                                      │
-  │  ✔ Detected ▲  Next.js (App Router)                  │
-  │  │  📁  Directory:  /Users/you/my-app                │
-  │  │  📦  Public Dir: /Users/you/my-app/public         │
+  │  v  Detected Next.js (App Router)                    │
+  │  │  - Directory:  /Users/you/my-app                  │
+  │  │  - Public Dir: /Users/you/my-app/public           │
   │                                                      │
   ├─ STEP 2/4 ─ Select Source Image ─────────────────────┤
   │                                                      │
-  │  🔍  Found 3 image(s) in the project                 │
+  │  i  Found 3 image(s) in the project                  │
   │                                                      │
   │  ? Pick an image to use as favicon:                  │
-  │  ❯ 🖼️  public/logo.png [PNG]                         │
-  │    🖼️  src/assets/icon.svg [SVG]                     │
-  │    🖼️  assets/brand.jpg [JPG]                        │
+  │  >  public/logo.png [PNG]                            │
+  │     src/assets/icon.svg [SVG]                        │
+  │     assets/brand.jpg [JPG]                           │
   │                                                      │
-  │  │  🖼️   Source:  logo.png                           │
-  │  │  📄  Size:    24.3 KB                             │
-  │  │  🎯  Format:  PNG                                 │
+  │  │  - Source:  logo.png                              │
+  │  │  - Size:    24.3 KB                               │
+  │  │  - Format:  PNG                                   │
   │                                                      │
   ├─ STEP 3/4 ─ Generate Favicons ───────────────────────┤
   │                                                      │
-  │  ✔ Generated 8 files successfully                    │
+  │  v  Generated 8 files successfully                   │
   │                                                      │
-  │  ┌──────────────────────────┬────────┬──────────┬─────┐
-  │  │ File                     │ Size   │ Dims     │     │
-  │  ├──────────────────────────┼────────┼──────────┼─────┤
-  │  │ 🟢 favicon-16x16.png     │ 0.4 KB │ 16×16    │ ✓   │
-  │  │ 🟢 favicon-32x32.png     │ 0.9 KB │ 32×32    │ ✓   │
-  │  │ 🟢 favicon-48x48.png     │ 1.4 KB │ 48×48    │ ✓   │
-  │  │ 🟢 apple-touch-icon.png  │ 7.2 KB │ 180×180  │ ✓   │
-  │  │ 🟢 android-chrome-192    │ 8.1 KB │ 192×192  │ ✓   │
-  │  │ 🟢 android-chrome-512    │ 24 KB  │ 512×512  │ ✓   │
-  │  │ 🔷 favicon.ico           │ 5.3 KB │ multi    │ ✓   │
-  │  │ 📋 site.webmanifest      │ 0.3 KB │ —        │ ✓   │
-  │  └──────────────────────────┴────────┴──────────┴─────┘
+  │  ┌───────────────────────┬────────┬─────────┬─────┐  │
+  │  │ File                  │ Size   │ Dims    │     │  │
+  │  ├───────────────────────┼────────┼─────────┼─────┤  │
+  │  │ * favicon-16x16.png   │ 0.4 KB │ 16x16   │  v  │  │
+  │  │ * favicon-32x32.png   │ 0.9 KB │ 32x32   │  v  │  │
+  │  │ * favicon-48x48.png   │ 1.4 KB │ 48x48   │  v  │  │
+  │  │ * apple-touch-icon    │ 7.2 KB │ 180x180 │  v  │  │
+  │  │ * android-chrome-192  │ 8.1 KB │ 192x192 │  v  │  │
+  │  │ * android-chrome-512  │ 24 KB  │ 512x512 │  v  │  │
+  │  │ * favicon.ico         │ 5.3 KB │ multi   │  v  │  │
+  │  │ * site.webmanifest    │ 0.3 KB │ ---     │  v  │  │
+  │  └───────────────────────┴────────┴─────────┴─────┘  │
   │                                                      │
   ├─ STEP 4/4 ─ Inject References ───────────────────────┤
   │                                                      │
-  │  ✔ References injected into project files            │
-  │  │  💉  Modified: app/layout.tsx                     │
+  │  v  References injected into project files           │
+  │  │  + Modified: app/layout.tsx                       │
   │                                                      │
   └──────────────────────────────────────────────────────┘
 
   ╔══════════════════════════════════════════════════════╗
   ║                                                      ║
-  ║    ✦ ── FAVICONS SET SUCCESSFULLY ── ✦               ║
+  ║    + ── FAVICONS SET SUCCESSFULLY ── +               ║
   ║                                                      ║
-  ║    ⚡ Duration:     1.24s                            ║
-  ║    ▲  Project:      Next.js (App Router)             ║
-  ║    🖼️  Source:       logo.png                        ║
-  ║    📦 Output:       /public                          ║
-  ║    💉 Injected:     Yes                              ║
+  ║    * Duration:     1.24s                             ║
+  ║    * Project:      Next.js (App Router)              ║
+  ║    * Source:       logo.png                          ║
+  ║    * Output:       /public                           ║
+  ║    * Injected:     Yes                               ║
   ║                                                      ║
   ║    Restart your dev server to see the changes.       ║
   ║                                                      ║
@@ -216,11 +213,11 @@ favicli detect -d ./apps/web
 ```text
   ╭──────────────────────────────────────────────╮
   │                                              │
-  │  ✅  Project Detection Result                │
+  │  v  Project Detection Result                 │
   │                                              │
-  │    Type:       ▲  Next.js (App Router)       │
+  │    Type:       * Next.js (App Router)        │
   │    Directory:  /Users/you/my-app             │
-  │    Status:     ✓ Ready to use                │
+  │    Status:     v Ready to use                │
   │                                              │
   │    Details:                                  │
   │    ├── appDir:    /Users/you/my-app/app      │
@@ -242,7 +239,7 @@ favicli remove -d ./apps/web
 ```
 
 ```text
-  🗑️   Remove Favicons
+  x   Remove Favicons
   ────────────────────────────────────────────────
 
   The following 8 files will be removed:
@@ -259,7 +256,7 @@ favicli remove -d ./apps/web
   ? Permanently delete these files? Yes
 
   ╭──────────────────────────────────────────────╮
-  │  ✅  Removed 8 files                         │
+  │  v  Removed 8 files                          │
   ╰──────────────────────────────────────────────╯
 
 ```
@@ -308,10 +305,10 @@ favicli remove -d ./apps/web
 ## Supported Projects
 
 ```text
-  ⚡  React + Vite           ──▶  injects into index.html (root)
-  ⚛   Create React App       ──▶  injects into public/index.html
-  ▲   Next.js App Router     ──▶  injects into app/layout.tsx metadata
-  ▲   Next.js Pages Router   ──▶  injects into pages/_document.tsx Head
+  * React + Vite           ──▶  injects into index.html (root)
+  * Create React App       ──▶  injects into public/index.html
+  * Next.js App Router     ──▶  injects into app/layout.tsx metadata
+  * Next.js Pages Router   ──▶  injects into pages/_document.tsx Head
 
 ```
 
@@ -320,11 +317,11 @@ favicli remove -d ./apps/web
 ```text
   my-monorepo/
   ├── apps/
-  │   ├── web/          ← ✅ detected
-  │   ├── docs/         ← ✅ detected
-  │   └── dashboard/    ← ✅ detected
+  │   ├── web/          ← [v] detected
+  │   ├── docs/         ← [v] detected
+  │   └── dashboard/    ← [v] detected
   ├── packages/
-  │   └── ui/           ← ✅ detected
+  │   └── ui/           ← [v] detected
   └── package.json
 
 ```
@@ -355,7 +352,7 @@ favicli remove -d ./apps/web
   │                                                          │
   │  • Re-running favicli set updates existing files         │
   │  • Injection is replacement-based, safe to rerun         │
-  │  • Use a square image (1:1) at least 512×512px           │
+  │  • Use a square image (1:1) at least 512x512px           │
   │  • Supported: .png  .jpg  .jpeg  .webp  .svg             │
   │                                                          │
   └──────────────────────────────────────────────────────────┘
@@ -376,11 +373,11 @@ favicli remove -d ./apps/web
 ```text
   ╔══════════════════════════════════════════╗
   ║                                          ║
-  ║   Made with ❤️  by Zain Afzal             ║
+  ║   Made with <3 by Zain Afzal             ║
   ║   zainafzal.dev                          ║
   ║                                          ║
   ║   If favicli saved you time,             ║
-  ║   give it a ⭐ on GitHub                  ║
+  ║   give it a star (*) on GitHub           ║
   ║                                          ║
   ╚══════════════════════════════════════════╝
 
@@ -389,4 +386,3 @@ favicli remove -d ./apps/web
 **MIT License**
 
 </div>
-
