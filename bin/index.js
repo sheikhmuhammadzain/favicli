@@ -37,7 +37,7 @@ if (!gradient) {
 // ──────────────────────────────────────────────
 
 const theme = {
-  primary: chalk.hex("#6C63FF"), // Purple
+  primary: chalk.hex("#0EA5E9"), // Sky blue
   secondary: chalk.hex("#00D9FF"), // Cyan
   accent: chalk.hex("#FFD700"), // Gold
   success: chalk.hex("#00E676"), // Green
@@ -47,7 +47,7 @@ const theme = {
   subtle: chalk.hex("#444444"), // Dark gray
   white: chalk.hex("#FFFFFF"),
   bg: {
-    primary: chalk.bgHex("#6C63FF").hex("#FFFFFF"),
+    primary: chalk.bgHex("#0EA5E9").hex("#FFFFFF"),
     success: chalk.bgHex("#00E676").hex("#000000"),
     warning: chalk.bgHex("#FFA726").hex("#000000"),
     error: chalk.bgHex("#FF5252").hex("#FFFFFF"),
@@ -84,7 +84,7 @@ const icons = {
 }
 
 // Custom gradient
-const faviGradient = gradient(["#6C63FF", "#00D9FF", "#00E676"])
+const faviGradient = gradient(["#0EA5E9", "#06B6D4", "#10B981"])
 const goldGradient = gradient(["#FFD700", "#FFA726"])
 const successGradient = gradient(["#00E676", "#00D9FF"])
 const errorGradient = gradient(["#FF5252", "#FFA726"])
@@ -167,7 +167,7 @@ function getProjectColor(type) {
   const colorMap = {
     [PROJECT_TYPES.NEXT_APP]: chalk.hex("#FFFFFF"),
     [PROJECT_TYPES.NEXT_PAGES]: chalk.hex("#FFFFFF"),
-    [PROJECT_TYPES.REACT_VITE]: chalk.hex("#BD34FE"),
+    [PROJECT_TYPES.REACT_VITE]: chalk.hex("#00B8D9"),
     [PROJECT_TYPES.REACT_CRA]: chalk.hex("#61DAFB"),
   }
   return colorMap[type] || theme.white
@@ -198,7 +198,7 @@ function showBanner() {
       padding: {top: 0, bottom: 0, left: 2, right: 2},
       margin: {top: 0, bottom: 0, left: 2, right: 0},
       borderStyle: "round",
-      borderColor: "#6C63FF",
+      borderColor: "#0EA5E9",
       textAlignment: "center",
     },
   )
@@ -231,7 +231,7 @@ function showHomeScreen() {
       padding: {top: 1, bottom: 1, left: 3, right: 3},
       margin: {top: 0, bottom: 0, left: 2, right: 0},
       borderStyle: "double",
-      borderColor: "#6C63FF",
+      borderColor: "#0EA5E9",
       textAlignment: "center",
     },
   )
@@ -372,7 +372,7 @@ program.addHelpText(
         padding: 1,
         margin: {top: 0, bottom: 0, left: 2, right: 0},
         borderStyle: "round",
-        borderColor: "#6C63FF",
+        borderColor: "#0EA5E9",
       },
     ),
     "",
@@ -832,7 +832,7 @@ setCommand.addHelpText(
         padding: 1,
         margin: {top: 0, bottom: 0, left: 2, right: 0},
         borderStyle: "round",
-        borderColor: "#6C63FF",
+        borderColor: "#0EA5E9",
       },
     ),
     "",
