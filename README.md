@@ -377,8 +377,6 @@ favicli remove -d ./apps/web
 
 **MIT License**
 
-</div>
 
-```
 
 
