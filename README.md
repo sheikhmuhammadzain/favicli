@@ -1,6 +1,3 @@
-
-
-```markdown
 <div align="center">
 
 <br />
@@ -696,26 +693,3 @@ Made with ❤️ and a mass quantity of favicons
 <br />
 
 </div>
-```
-
----
-
-### Bonus: Create the `assets/` folder for the banner
-
-```bash
-mkdir assets
-```
-
-Create a banner image (`assets/banner.png`) for the top of your README. You can use:
-
-- **[Canva](https://canva.com)** — Design a 1400×400 banner
-- **[Figma](https://figma.com)** — Professional look
-- **[Carbon](https://carbon.now.sh)** — Screenshot of your CLI running
-
-A good banner should show:
-- The CLI name "favicli" in large text
-- A terminal screenshot or icon
-- The tagline "Favicon generator for React & Next.js"
-- A gradient purple → cyan background matching your CLI theme
-
-> Replace all `yourusername` references with your actual GitHub/npm username before publishing.
