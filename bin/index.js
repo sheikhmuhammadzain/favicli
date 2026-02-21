@@ -11,14 +11,32 @@ const { generateFavicons } = require("../src/generate");
 const { injectFavicons } = require("../src/inject");
 const { SUPPORTED_EXTENSIONS, PROJECT_TYPES } = require("../src/constants");
 
+const ui = {
+  ok: chalk.green("[OK]"),
+  warn: chalk.yellow("[WARN]"),
+  err: chalk.red("[ERR]"),
+  info: chalk.cyan("[INFO]"),
+  dim: (text) => chalk.dim(text),
+  title: (text) => chalk.bold.cyan(text),
+  accent: (text) => chalk.bold.yellow(text),
+};
+
+function hr(color = "gray") {
+  const line = "=".repeat(66);
+  return chalk[color] ? chalk[color](line) : line;
+}
+
 function showBanner() {
   console.log(
-    chalk.cyan(`
-  ===================================
-   favicli
-   Favicon generator for React/Next
-  ===================================
-  `)
+    [
+      "",
+      hr("cyan"),
+      chalk.bold.cyan("  FAVICLI"),
+      chalk.cyan("  Favicon generator for React and Next.js projects"),
+      chalk.dim("  Fast setup: detect project -> choose image -> generate -> inject"),
+      hr("cyan"),
+      "",
+    ].join("\n")
   );
 }
 
@@ -79,21 +97,27 @@ function findImageFiles(rootDir, maxDepth = 3) {
 }
 
 program.name("favicli").description("Auto-set favicons in React & Next.js projects").version("1.0.0");
+program.configureOutput({
+  outputError: (str, write) => write(chalk.red(str)),
+});
 program.addHelpText(
   "after",
-  `
-Behavior:
-  - If --dir is not a React/Next.js app, favicli scans nearby folders and lets you pick a project.
-  - Then it scans that project for images and shows an interactive image picker.
-  - Finally it generates favicon files and injects references automatically.
-
-Examples:
-  $ favicli set
-  $ favicli set logo.png
-  $ favicli set -d .
-  $ favicli detect -d .\\apps\\web
-  $ favicli remove -d .\\apps\\web
-`
+  [
+    "",
+    ui.title("Behavior"),
+    `  ${chalk.cyan("1.")} Detect a React/Next.js project from ${ui.accent("--dir")}.`,
+    `  ${chalk.cyan("2.")} If not found, scan nearby folders and let you pick one.`,
+    `  ${chalk.cyan("3.")} Scan the selected project for images and open image picker.`,
+    `  ${chalk.cyan("4.")} Generate favicon files and inject references automatically.`,
+    "",
+    ui.title("Examples"),
+    `  ${ui.accent("$")} favicli set`,
+    `  ${ui.accent("$")} favicli set logo.png`,
+    `  ${ui.accent("$")} favicli set -d .`,
+    `  ${ui.accent("$")} favicli detect -d .\\apps\\web`,
+    `  ${ui.accent("$")} favicli remove -d .\\apps\\web`,
+    "",
+  ].join("\n")
 );
 
 const setCommand = program
@@ -115,7 +139,7 @@ const setCommand = program
 
       if (detectedProjects.length === 0) {
         spinner.fail("Could not detect a React or Next.js project");
-        console.log(chalk.dim("Tip: run this inside a React/Next.js project, or pass --dir"));
+        console.log(ui.dim("Tip: run this inside a React/Next.js project, or pass --dir"));
         process.exit(1);
       }
 
@@ -136,7 +160,7 @@ const setCommand = program
       projectDir = selectedProject.dir;
       projectType = selectedProject.type;
       details = selectedProject.details;
-      console.log(chalk.dim(`Using project: ${projectDir}`));
+      console.log(`${ui.info} ${ui.dim(`Using project: ${projectDir}`)}`);
     } else {
       spinner.succeed(`Detected: ${chalk.green(getProjectLabel(projectType))}`);
     }
@@ -190,28 +214,28 @@ const setCommand = program
     imagePath = path.isAbsolute(imagePath) ? imagePath : path.resolve(projectDir, imagePath);
 
     if (!fs.existsSync(imagePath)) {
-      console.log(chalk.red(`Image not found: ${imagePath}`));
+      console.log(`${ui.err} Image not found: ${imagePath}`);
       process.exit(1);
     }
 
     const ext = path.extname(imagePath).toLowerCase();
     if (!SUPPORTED_EXTENSIONS.includes(ext)) {
-      console.log(chalk.red(`Unsupported format: ${ext}`));
-      console.log(chalk.dim(`Supported: ${SUPPORTED_EXTENSIONS.join(", ")}`));
+      console.log(`${ui.err} Unsupported format: ${ext}`);
+      console.log(ui.dim(`Supported: ${SUPPORTED_EXTENSIONS.join(", ")}`));
       process.exit(1);
     }
 
-    console.log(chalk.dim(`Using: ${imagePath}`));
+    console.log(`${ui.info} ${ui.dim(`Using image: ${imagePath}`)}`);
 
     const genSpinner = ora("Generating favicons...").start();
     try {
       const outputDir = details.publicDir || path.join(projectDir, "public");
       const results = await generateFavicons(imagePath, outputDir);
       genSpinner.succeed(`Generated ${chalk.green(results.length)} files`);
-      console.log(chalk.dim("\nGenerated files:"));
+      console.log(`\n${ui.title("Generated Files")}`);
       results.forEach(({ name, size }) => {
         const sizeLabel = typeof size === "number" ? `${size}x${size}` : size;
-        console.log(chalk.dim(`  - ${name} (${sizeLabel})`));
+        console.log(`  ${ui.ok} ${chalk.white(name)} ${chalk.dim(`(${sizeLabel})`)}`);
       });
     } catch (err) {
       genSpinner.fail("Failed to generate favicons");
@@ -226,32 +250,42 @@ const setCommand = program
         if (injected) {
           injectSpinner.succeed("Favicon references injected");
         } else {
-          injectSpinner.warn("Could not auto-inject. Add references manually.");
+          injectSpinner.warn(`${ui.warn} Could not auto-inject. Add references manually.`);
         }
       } catch (err) {
-        injectSpinner.warn(`Auto-inject warning: ${err.message}`);
+        injectSpinner.warn(`${ui.warn} Auto-inject warning: ${err.message}`);
       }
     }
 
-    console.log(chalk.green("\nFavicons set successfully.\nRestart your dev server to see changes.\n"));
+    console.log(
+      [
+        "",
+        hr("green"),
+        `  ${ui.ok} ${chalk.bold.green("Favicons set successfully")}`,
+        `  ${chalk.dim("Restart your dev server to see the changes.")}`,
+        hr("green"),
+        "",
+      ].join("\n")
+    );
   });
 
 setCommand.addHelpText(
   "after",
-  `
-Smart Flow:
-  1) Detect project in --dir.
-  2) If not detected, scan: current folder, direct subfolders, apps/*, packages/*.
-  3) Ask you to select a detected React/Next.js project.
-  4) Scan selected project for images (.png, .jpg, .jpeg, .webp, .svg) up to depth 3.
-  5) Ask you to pick an image, then generate and inject favicons.
-
-Examples:
-  $ favicli set
-  $ favicli set -d .
-  $ favicli set .\\public\\logo.png -d .\\apps\\web
-  $ favicli set --no-inject
-`
+  [
+    "",
+    ui.title("Smart Flow"),
+    `  ${chalk.cyan("1.")} Detect project in ${ui.accent("--dir")}.`,
+    `  ${chalk.cyan("2.")} If not detected, scan: current folder, direct subfolders, apps/*, packages/*.`,
+    `  ${chalk.cyan("3.")} Pick a detected React/Next.js project.`,
+    `  ${chalk.cyan("4.")} Pick an image (.png, .jpg, .jpeg, .webp, .svg), then generate and inject.`,
+    "",
+    ui.title("Examples"),
+    `  ${ui.accent("$")} favicli set`,
+    `  ${ui.accent("$")} favicli set -d .`,
+    `  ${ui.accent("$")} favicli set .\\public\\logo.png -d .\\apps\\web`,
+    `  ${ui.accent("$")} favicli set --no-inject`,
+    "",
+  ].join("\n")
 );
 
 program
@@ -261,10 +295,11 @@ program
   .action((options) => {
     const projectDir = path.resolve(options.dir);
     const { type, details } = detectProject(projectDir);
-    console.log(chalk.cyan(`\nProject: ${chalk.bold(getProjectLabel(type))}`));
-    console.log(chalk.dim(`Directory: ${projectDir}`));
+    console.log(`\n${ui.title("Project Detection")}`);
+    console.log(`  ${ui.info} Type: ${chalk.bold(getProjectLabel(type))}`);
+    console.log(`  ${ui.info} Directory: ${chalk.dim(projectDir)}`);
     if (details) {
-      console.log(chalk.dim(`Details: ${JSON.stringify(details, null, 2)}`));
+      console.log(`  ${ui.info} Details:\n${chalk.dim(JSON.stringify(details, null, 2))}`);
     }
     console.log();
   });
@@ -305,12 +340,12 @@ program
       const filePath = path.join(publicDir, file);
       if (fs.existsSync(filePath)) {
         fs.removeSync(filePath);
-        console.log(chalk.dim(`Removed ${file}`));
+        console.log(`  ${ui.ok} ${chalk.dim(`Removed ${file}`)}`);
         removed += 1;
       }
     });
 
-    console.log(chalk.green(`\nRemoved ${removed} files\n`));
+    console.log(`\n${ui.ok} ${chalk.green(`Removed ${removed} files`)}\n`);
   });
 
 program
@@ -322,5 +357,28 @@ program
       await program.parseAsync(["node", "favicli", "set"]);
     }
   });
+
+program.on("--help", () => {
+  console.log(
+    [
+      ui.title("Tips"),
+      `  ${chalk.cyan("-")} Use ${ui.accent("favicli set")} for full interactive flow.`,
+      `  ${chalk.cyan("-")} Use ${ui.accent("favicli set logo.png")} to skip image picker.`,
+      `  ${chalk.cyan("-")} Use ${ui.accent("--no-inject")} if you only want generated files.`,
+      "",
+    ].join("\n")
+  );
+});
+
+setCommand.on("--help", () => {
+  console.log(
+    [
+      ui.title("Set Command Tips"),
+      `  ${chalk.cyan("-")} Works great from monorepo root with ${ui.accent("-d .")}.`,
+      `  ${chalk.cyan("-")} You can use absolute or project-relative image paths.`,
+      "",
+    ].join("\n")
+  );
+});
 
 program.parse();
