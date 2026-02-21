@@ -4,6 +4,25 @@ const cheerio = require("cheerio");
 const chalk = require("chalk");
 const { PROJECT_TYPES } = require("./constants");
 
+const NEXT_APP_ICONS_CONFIG = `
+  icons: {
+    icon: [
+      { url: "/favicon.ico", sizes: "any" },
+      { url: "/favicon-16x16.png", sizes: "16x16", type: "image/png" },
+      { url: "/favicon-32x32.png", sizes: "32x32", type: "image/png" }
+    ],
+    apple: [{ url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" }]
+  },
+  manifest: "/site.webmanifest",`;
+
+const NEXT_PAGES_FAVICON_LINKS = `
+            <link rel="icon" href="/favicon.ico" />
+            <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+            <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+            <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+            <link rel="manifest" href="/site.webmanifest" />
+            <meta name="theme-color" content="#ffffff" />`;
+
 function injectIntoHtml(indexHtmlPath) {
   if (!fs.existsSync(indexHtmlPath)) {
     console.log(chalk.yellow(`index.html not found at ${indexHtmlPath}`));
@@ -53,27 +72,13 @@ function injectIntoNextApp(appDir) {
 
   let content = fs.readFileSync(layoutPath, "utf-8");
 
-  if (content.includes("icons")) {
-    console.log(chalk.yellow("Metadata 'icons' already exists in layout. Skipping injection."));
-    console.log(chalk.dim("You can manually update icons in metadata."));
-    return true;
-  }
-
   const metadataRegex = /export\s+const\s+metadata\s*(?::\s*Metadata\s*)?=\s*\{/;
 
   if (metadataRegex.test(content)) {
-    const iconsConfig = `
-  icons: {
-    icon: [
-      { url: "/favicon.ico", sizes: "any" },
-      { url: "/favicon-16x16.png", sizes: "16x16", type: "image/png" },
-      { url: "/favicon-32x32.png", sizes: "32x32", type: "image/png" }
-    ],
-    apple: [{ url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" }]
-  },
-  manifest: "/site.webmanifest",`;
-
-    content = content.replace(metadataRegex, (match) => `${match}${iconsConfig}`);
+    // Remove existing metadata icons/manifest so each run replaces previous favicon config.
+    content = content.replace(/icons\s*:\s*\{[\s\S]*?\}\s*,?/g, "");
+    content = content.replace(/manifest\s*:\s*["'`][^"'`]+["'`]\s*,?/g, "");
+    content = content.replace(metadataRegex, (match) => `${match}${NEXT_APP_ICONS_CONFIG}`);
     fs.writeFileSync(layoutPath, content);
     return true;
   }
@@ -84,28 +89,12 @@ function injectIntoNextApp(appDir) {
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  icons: {
-    icon: [
-      { url: "/favicon.ico", sizes: "any" },
-      { url: "/favicon-16x16.png", sizes: "16x16", type: "image/png" },
-      { url: "/favicon-32x32.png", sizes: "32x32", type: "image/png" }
-    ],
-    apple: [{ url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" }]
-  },
-  manifest: "/site.webmanifest"
+${NEXT_APP_ICONS_CONFIG.slice(0, -1)}
 };
 `
     : `
 export const metadata = {
-  icons: {
-    icon: [
-      { url: "/favicon.ico", sizes: "any" },
-      { url: "/favicon-16x16.png", sizes: "16x16", type: "image/png" },
-      { url: "/favicon-32x32.png", sizes: "32x32", type: "image/png" }
-    ],
-    apple: [{ url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" }]
-  },
-  manifest: "/site.webmanifest"
+${NEXT_APP_ICONS_CONFIG.slice(0, -1)}
 };
 `;
 
@@ -140,23 +129,16 @@ function injectIntoNextPages(pagesDir) {
 
   if (docPath) {
     let content = fs.readFileSync(docPath, "utf-8");
-
-    if (content.includes("favicon")) {
-      console.log(chalk.yellow("Favicon references already exist in _document"));
-      return true;
-    }
-
-    const faviconLinks = `
-            <link rel="icon" href="/favicon.ico" />
-            <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
-            <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
-            <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
-            <link rel="manifest" href="/site.webmanifest" />
-            <meta name="theme-color" content="#ffffff" />`;
+    // Remove existing favicon-related tags so the new set replaces old values.
+    content = content.replace(/^\s*<link[^>]*rel="icon"[^>]*\/>\s*$/gim, "");
+    content = content.replace(/^\s*<link[^>]*rel="shortcut icon"[^>]*\/>\s*$/gim, "");
+    content = content.replace(/^\s*<link[^>]*rel="apple-touch-icon"[^>]*\/>\s*$/gim, "");
+    content = content.replace(/^\s*<link[^>]*rel="manifest"[^>]*\/>\s*$/gim, "");
+    content = content.replace(/^\s*<meta[^>]*name="theme-color"[^>]*\/>\s*$/gim, "");
 
     const headRegex = /<Head>/i;
     if (headRegex.test(content)) {
-      content = content.replace(headRegex, `<Head>${faviconLinks}`);
+      content = content.replace(headRegex, `<Head>${NEXT_PAGES_FAVICON_LINKS}`);
       fs.writeFileSync(docPath, content);
       return true;
     }
@@ -172,12 +154,7 @@ export default function Document() {
   return (
     <Html lang="en">
       <Head>
-        <link rel="icon" href="/favicon.ico" />
-        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
-        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
-        <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
-        <link rel="manifest" href="/site.webmanifest" />
-        <meta name="theme-color" content="#ffffff" />
+${NEXT_PAGES_FAVICON_LINKS.replace(/\n/g, "\n        ").trimStart()}
       </Head>
       <body>
         <Main />
