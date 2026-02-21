@@ -2,6 +2,15 @@
   "name": "favicli",
   "version": "1.0.0",
   "description": "Auto-set favicons in React & Next.js projects from any image",
+  "homepage": "https://github.com/sheikhmuhammadzain/zain-cli#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sheikhmuhammadzain/zain-cli.git"
+  },
+  "bugs": {
+    "url": "https://github.com/sheikhmuhammadzain/zain-cli/issues",
+    "email": "zainsheikh3462@gmail.com"
+  },
   "bin": {
     "favicli": "./bin/index.js"
   },
