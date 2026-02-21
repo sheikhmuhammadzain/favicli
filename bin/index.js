@@ -103,6 +103,17 @@ function blank() {
   console.log("")
 }
 
+function centerAscii(text) {
+  const width = process.stdout.columns || 80
+  return text
+    .split("\n")
+    .map(line => {
+      const leftPad = Math.max(0, Math.floor((width - line.length) / 2))
+      return `${" ".repeat(leftPad)}${line}`
+    })
+    .join("\n")
+}
+
 function stepHeader(stepNum, totalSteps, label) {
   blank()
   const stepBadge = theme.bg.primary(` STEP ${stepNum}/${totalSteps} `)
@@ -216,7 +227,7 @@ function showHomeScreen() {
   })
 
   blank()
-  console.log(faviGradient(art))
+  console.log(faviGradient(centerAscii(art)))
 
   const commit = getGitCommit()
   const versionInfo = `v${version}${commit ? ` ${theme.subtle(`(${commit})`)}` : ""}`
@@ -234,10 +245,11 @@ function showHomeScreen() {
     ].join("\n"),
     {
       padding: {top: 1, bottom: 1, left: 3, right: 3},
-      margin: {top: 0, bottom: 0, left: 2, right: 0},
+      margin: {top: 0, bottom: 0, left: 0, right: 0},
       borderStyle: "double",
       borderColor: "#0EA5E9",
       textAlignment: "center",
+      float: "center",
     },
   )
 
