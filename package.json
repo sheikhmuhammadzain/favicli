@@ -1,0 +1,32 @@
+{
+  "name": "favicli",
+  "version": "1.0.0",
+  "description": "Auto-set favicons in React & Next.js projects from any image",
+  "bin": {
+    "favicli": "./bin/index.js"
+  },
+  "files": [
+    "bin",
+    "src"
+  ],
+  "keywords": [
+    "favicon",
+    "cli",
+    "react",
+    "nextjs",
+    "icon"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
+  "dependencies": {
+    "chalk": "^4.1.2",
+    "cheerio": "^1.0.0",
+    "commander": "^12.1.0",
+    "fs-extra": "^11.2.0",
+    "glob": "^10.3.10",
+    "inquirer": "^8.2.6",
+    "ora": "^5.4.1",
+    "png-to-ico": "^2.1.8",
+    "sharp": "^0.33.2"
+  }
+}
