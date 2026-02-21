@@ -18,6 +18,8 @@ const {generateFavicons} = require("../src/generate")
 const {injectFavicons} = require("../src/inject")
 const {SUPPORTED_EXTENSIONS, PROJECT_TYPES} = require("../src/constants")
 const {version} = require("../package.json")
+const CREATOR_NAME = "Zain Afzal"
+const CREATOR_WEBSITE = "zainafzal.dev"
 
 const gradient =
   typeof gradientLib === "function"
@@ -193,6 +195,7 @@ function showBanner() {
       `${theme.muted("for")} ${theme.secondary("React")} ${theme.muted("&")} ${theme.secondary("Next.js")} ${theme.muted("projects")}`,
       "",
       `${theme.subtle(`v${version}`)}${getGitCommit() ? theme.subtle(` • ${getGitCommit()}`) : ""}`,
+      `${theme.subtle(`by ${CREATOR_NAME} • ${CREATOR_WEBSITE}`)}`,
     ].join("\n"),
     {
       padding: {top: 0, bottom: 0, left: 2, right: 2},
@@ -226,6 +229,8 @@ function showHomeScreen() {
       "",
       `${theme.subtle("One command to set up favicons for any React/Next.js project.")}`,
       `${theme.subtle("Supports PNG, JPG, JPEG, WebP, and SVG source images.")}`,
+      "",
+      `${theme.subtle(`Created by ${CREATOR_NAME} • ${CREATOR_WEBSITE}`)}`,
     ].join("\n"),
     {
       padding: {top: 1, bottom: 1, left: 3, right: 3},
@@ -367,6 +372,8 @@ program.addHelpText(
         `  ${theme.accent("$")} favicli set -d ./apps/web`,
         `  ${theme.accent("$")} favicli detect`,
         `  ${theme.accent("$")} favicli remove`,
+        "",
+        `${theme.subtle(`By ${CREATOR_NAME} • ${CREATOR_WEBSITE}`)}`,
       ].join("\n"),
       {
         padding: 1,
@@ -827,6 +834,8 @@ setCommand.addHelpText(
         `  ${theme.accent("$")} favicli set logo.png`,
         `  ${theme.accent("$")} favicli set ./public/logo.png -d ./apps/web`,
         `  ${theme.accent("$")} favicli set --no-inject`,
+        "",
+        `${theme.subtle(`By ${CREATOR_NAME} • ${CREATOR_WEBSITE}`)}`,
       ].join("\n"),
       {
         padding: 1,
