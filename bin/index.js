@@ -70,6 +70,15 @@ function findDetectedProjects(baseDir) {
 
 function findImageFiles(rootDir, maxDepth = 3) {
   const ignoreDirs = new Set(["node_modules", ".git", ".next", "dist", "build", ".turbo"]);
+  const generatedFaviconFiles = new Set([
+    "favicon.ico",
+    "favicon-16x16.png",
+    "favicon-32x32.png",
+    "favicon-48x48.png",
+    "apple-touch-icon.png",
+    "android-chrome-192x192.png",
+    "android-chrome-512x512.png",
+  ]);
   const results = [];
 
   function walk(currentDir, depth) {
@@ -87,6 +96,7 @@ function findImageFiles(rootDir, maxDepth = 3) {
 
       const ext = path.extname(entry.name).toLowerCase();
       if (SUPPORTED_EXTENSIONS.includes(ext)) {
+        if (generatedFaviconFiles.has(entry.name)) continue;
         results.push(path.relative(rootDir, fullPath));
       }
     }
@@ -154,6 +164,8 @@ const setCommand = program
             name: `${path.relative(baseDir, project.dir) || "."} (${getProjectLabel(project.type)})`,
             value: project,
           })),
+          loop: false,
+          pageSize: 12,
         },
       ]);
 
@@ -171,17 +183,34 @@ const setCommand = program
       const possibleImages = findImageFiles(projectDir);
 
       if (possibleImages.length > 0) {
+        const maxChoices = 120;
+        const truncated = possibleImages.slice(0, maxChoices);
+        const hiddenCount = Math.max(0, possibleImages.length - truncated.length);
+
         const { selectedImage } = await inquirer.prompt([
           {
             type: "list",
             name: "selectedImage",
-            message: "Select an image to use as favicon:",
+            message:
+              hiddenCount > 0
+                ? `Select an image (${truncated.length}/${possibleImages.length} shown):`
+                : `Select an image (${possibleImages.length} found):`,
             choices: [
-              ...possibleImages,
+              ...truncated.map((img) => ({ name: img, value: img })),
+              ...(hiddenCount > 0
+                ? [
+                    new inquirer.Separator(),
+                    {
+                      name: `Showed first ${truncated.length}. Use manual path for others (${hiddenCount} hidden)`,
+                      value: "__manual__",
+                    },
+                  ]
+                : []),
               new inquirer.Separator(),
               { name: "Enter path manually", value: "__manual__" },
             ],
-            pageSize: 18,
+            pageSize: 16,
+            loop: false,
           },
         ]);
 
