@@ -16,7 +16,7 @@
     "nextjs",
     "icon"
   ],
-  "author": "Your Name",
+  "author": "Zain Afzal <zainsheikh3462@gmail.com> (https://zainafzal.dev)",
   "license": "MIT",
   "dependencies": {
     "boxen": "^5.1.2",
