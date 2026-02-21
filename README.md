@@ -1,8 +1,5 @@
 
 
-Here's your README with ASCII art added:
-
-```markdown
 <div align="center">
 
 ```
