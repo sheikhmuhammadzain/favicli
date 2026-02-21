@@ -4,7 +4,10 @@ const cheerio = require("cheerio");
 const chalk = require("chalk");
 const { PROJECT_TYPES } = require("./constants");
 
-const NEXT_APP_ICONS_CONFIG = `
+const NEXT_APP_FAVICLI_START = "// favicli:start";
+const NEXT_APP_FAVICLI_END = "// favicli:end";
+const NEXT_APP_ICONS_BLOCK = `
+  ${NEXT_APP_FAVICLI_START}
   icons: {
     icon: [
       { url: "/favicon.ico", sizes: "any" },
@@ -13,7 +16,8 @@ const NEXT_APP_ICONS_CONFIG = `
     ],
     apple: [{ url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" }]
   },
-  manifest: "/site.webmanifest",`;
+  manifest: "/site.webmanifest",
+  ${NEXT_APP_FAVICLI_END}`;
 
 const NEXT_PAGES_FAVICON_LINKS = `
             <link rel="icon" href="/favicon.ico" />
@@ -75,10 +79,19 @@ function injectIntoNextApp(appDir) {
   const metadataRegex = /export\s+const\s+metadata\s*(?::\s*Metadata\s*)?=\s*\{/;
 
   if (metadataRegex.test(content)) {
-    // Remove existing metadata icons/manifest so each run replaces previous favicon config.
-    content = content.replace(/icons\s*:\s*\{[\s\S]*?\}\s*,?/g, "");
-    content = content.replace(/manifest\s*:\s*["'`][^"'`]+["'`]\s*,?/g, "");
-    content = content.replace(metadataRegex, (match) => `${match}${NEXT_APP_ICONS_CONFIG}`);
+    const metadataBlockRegex =
+      /(export\s+const\s+metadata\s*(?::\s*Metadata\s*)?=\s*\{)([\s\S]*?)(\n\};)/m;
+
+    content = content.replace(metadataBlockRegex, (full, start, body, end) => {
+      const markerRegex = new RegExp(
+        `${NEXT_APP_FAVICLI_START.replace("/", "\\/")}[\\s\\S]*?${NEXT_APP_FAVICLI_END.replace("/", "\\/")}`,
+        "m"
+      );
+      const cleanedBody = markerRegex.test(body) ? body.replace(markerRegex, "").trimEnd() : body.trimEnd();
+      const bodyWithNewline = cleanedBody.length > 0 ? `${cleanedBody}\n` : "\n";
+      return `${start}${bodyWithNewline}${NEXT_APP_ICONS_BLOCK}${end}`;
+    });
+
     fs.writeFileSync(layoutPath, content);
     return true;
   }
@@ -89,12 +102,12 @@ function injectIntoNextApp(appDir) {
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-${NEXT_APP_ICONS_CONFIG.slice(0, -1)}
+${NEXT_APP_ICONS_BLOCK}
 };
 `
     : `
 export const metadata = {
-${NEXT_APP_ICONS_CONFIG.slice(0, -1)}
+${NEXT_APP_ICONS_BLOCK}
 };
 `;
 
