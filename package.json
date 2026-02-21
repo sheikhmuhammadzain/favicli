@@ -1,6 +1,6 @@
 {
   "name": "favicli",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Auto-set favicons in React & Next.js projects from any image",
   "homepage": "https://github.com/sheikhmuhammadzain/favicli#readme",
   "repository": {
