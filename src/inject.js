@@ -27,6 +27,120 @@ const NEXT_PAGES_FAVICON_LINKS = `
             <link rel="manifest" href="/site.webmanifest" />
             <meta name="theme-color" content="#ffffff" />`;
 
+function removeTopLevelProperty(objectBody, propertyName) {
+  let source = objectBody;
+
+  const isWordBoundary = (ch) => !ch || !/[A-Za-z0-9_$]/.test(ch);
+
+  function findPropertyStart() {
+    let depthCurly = 0;
+    let depthSquare = 0;
+    let depthParen = 0;
+    let inString = null;
+    let escaped = false;
+
+    for (let i = 0; i < source.length; i++) {
+      const ch = source[i];
+
+      if (inString) {
+        if (escaped) {
+          escaped = false;
+        } else if (ch === "\\") {
+          escaped = true;
+        } else if (ch === inString) {
+          inString = null;
+        }
+        continue;
+      }
+
+      if (ch === "'" || ch === '"' || ch === "`") {
+        inString = ch;
+        continue;
+      }
+
+      if (ch === "{") depthCurly++;
+      else if (ch === "}") depthCurly--;
+      else if (ch === "[") depthSquare++;
+      else if (ch === "]") depthSquare--;
+      else if (ch === "(") depthParen++;
+      else if (ch === ")") depthParen--;
+
+      if (depthCurly === 0 && depthSquare === 0 && depthParen === 0) {
+        if (
+          source.slice(i, i + propertyName.length) === propertyName &&
+          isWordBoundary(source[i - 1]) &&
+          isWordBoundary(source[i + propertyName.length])
+        ) {
+          let j = i + propertyName.length;
+          while (j < source.length && /\s/.test(source[j])) j++;
+          if (source[j] === ":") return i;
+        }
+      }
+    }
+
+    return -1;
+  }
+
+  function findPropertyEnd(startIndex) {
+    let i = startIndex;
+    while (i < source.length && source[i] !== ":") i++;
+    if (i >= source.length) return source.length;
+    i += 1;
+
+    let depthCurly = 0;
+    let depthSquare = 0;
+    let depthParen = 0;
+    let inString = null;
+    let escaped = false;
+
+    for (; i < source.length; i++) {
+      const ch = source[i];
+
+      if (inString) {
+        if (escaped) {
+          escaped = false;
+        } else if (ch === "\\") {
+          escaped = true;
+        } else if (ch === inString) {
+          inString = null;
+        }
+        continue;
+      }
+
+      if (ch === "'" || ch === '"' || ch === "`") {
+        inString = ch;
+        continue;
+      }
+
+      if (ch === "{") depthCurly++;
+      else if (ch === "}") depthCurly--;
+      else if (ch === "[") depthSquare++;
+      else if (ch === "]") depthSquare--;
+      else if (ch === "(") depthParen++;
+      else if (ch === ")") depthParen--;
+
+      if (depthCurly === 0 && depthSquare === 0 && depthParen === 0 && ch === ",") {
+        return i + 1;
+      }
+    }
+
+    return source.length;
+  }
+
+  while (true) {
+    const propStart = findPropertyStart();
+    if (propStart === -1) break;
+
+    let removeStart = propStart;
+    while (removeStart > 0 && source[removeStart - 1] !== "\n") removeStart--;
+
+    const removeEnd = findPropertyEnd(propStart);
+    source = source.slice(0, removeStart) + source.slice(removeEnd);
+  }
+
+  return source;
+}
+
 function injectIntoHtml(indexHtmlPath) {
   if (!fs.existsSync(indexHtmlPath)) {
     console.log(chalk.yellow(`index.html not found at ${indexHtmlPath}`));
@@ -87,7 +201,10 @@ function injectIntoNextApp(appDir) {
         `${NEXT_APP_FAVICLI_START.replace("/", "\\/")}[\\s\\S]*?${NEXT_APP_FAVICLI_END.replace("/", "\\/")}`,
         "m"
       );
-      const cleanedBody = markerRegex.test(body) ? body.replace(markerRegex, "").trimEnd() : body.trimEnd();
+      let cleanedBody = markerRegex.test(body) ? body.replace(markerRegex, "") : body;
+      cleanedBody = removeTopLevelProperty(cleanedBody, "icons");
+      cleanedBody = removeTopLevelProperty(cleanedBody, "manifest");
+      cleanedBody = cleanedBody.trimEnd();
       const bodyWithNewline = cleanedBody.length > 0 ? `${cleanedBody}\n` : "\n";
       return `${start}${bodyWithNewline}${NEXT_APP_ICONS_BLOCK}${end}`;
     });
