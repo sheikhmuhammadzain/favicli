@@ -68,7 +68,7 @@ favicli remove
 
  ╔════════════════════════════════════════════════════════╗
  ║                                                        ║
- ║   * Favicon CLI  v1.0.0                               ║
+ ║   * Favicon CLI  v1.0.0                                ║
  ║                                                        ║
  ║   Detect -> Choose -> Generate -> Inject               ║
  ║                                                        ║
@@ -274,8 +274,8 @@ favicli remove -d ./apps/web
   │   Detect     │  │   Generate   │  │    Inject    │
   │   Project    │  │   All Sizes  │  │  References  │
   └──────┬───────┘  └──────┬───────┘  └───────┬──────┘
-         │                  │                  │
-         ▼                  ▼                  ▼
+         │                 │                  │
+         ▼                 ▼                  ▼
   ┌─────────────────────────────────────────────────┐
   │                   /public                       │
   │                                                 │
